@@ -1,664 +1,472 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahender Blogs</title>
+    <title>Silent Camera App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* --- CSS VARIABLES & RESET --- */
-        :root {
-            --bg-body: #0f172a;
-            --bg-card: #1e293b;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
-            --accent-hover: #0ea5e9;
-            --border: #334155;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            font-family: var(--font-main);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        /* --- HEADER & NAVIGATION --- */
-        header {
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            padding: 1.5rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        input[type="text"], select {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: white;
-            padding: 0.6rem 1rem; /* Slightly increased padding for touch targets */
-            border-radius: 6px;
-            outline: none;
-            transition: 0.3s;
-            flex-grow: 1; /* Allows controls to expand */
-            min-width: 120px;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
-        }
-        
-        /* --- GRID LAYOUT --- */
-        .container {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-
-        .blog-grid {
-            display: grid;
-            /* Ensures minimum 300px columns, falls to 1 column gracefully on small screens */
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        /* --- BLOG CARD DESIGN --- */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
-            border-color: var(--accent);
-        }
-
-        .thumbnail-area {
-            height: 200px;
-            width: 100%;
-            background-color: #2d3748;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .thumbnail-area img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .card:hover .thumbnail-area img {
-            transform: scale(1.05);
-        }
-
-        .card-content {
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .badge {
-            display: inline-block;
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--accent);
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            width: fit-content;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
-            color: #fff;
-        }
-
-        .card-excerpt {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .read-more-btn {
-            background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 0.6rem 1.2rem; /* Increased padding for better touch target */
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-align: center;
-            text-decoration: none;
-            align-self: flex-start;
-        }
-
-        .read-more-btn:hover {
-            background: var(--accent);
-            color: #fff;
-        }
-
-        /* --- MODAL (POPUP) STYLES --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            font-family: "Inter", sans-serif;
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease;
-            backdrop-filter: blur(5px);
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem; /* Add some padding around the body for smaller screens */
         }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            padding: 2rem;
-            border-radius: 12px;
-            max-width: 800px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            border: 1px solid var(--border);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1.5rem;
-            font-size: 2rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: color 0.2s;
-        }
-
-        .close-modal:hover {
-            color: white;
-        }
-
-        .modal-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-
-        /* --- FOOTER STYLES --- */
-        footer {
-            background: rgba(15, 23, 42, 0.95);
-            border-top: 1px solid var(--border);
-            padding: 4rem 2rem;
-            margin-top: 4rem;
+        .container {
+            background-color: #2d3748; /* Slightly lighter dark background */
+            padding: 1.5rem;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             text-align: center;
+            max-width: 90%;
+            width: 600px;
         }
-
-        .footer-content {
-            max-width: 600px;
-            margin: 0 auto;
+        video, canvas {
+            display: block;
+            width: 100%;
+            max-width: 560px; /* Max width for video/canvas */
+            height: auto;
+            border-radius: 0.5rem; /* Rounded corners for media elements */
+            margin: 0 auto 1.5rem auto; /* Center and add margin below */
+            background-color: #000; /* Black background for video/canvas when no stream */
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        button {
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            color: #fff;
+            border: none;
+            background-color: #4a5568; /* Default button color */
+            flex-grow: 1; /* Allow buttons to grow and fill space on smaller screens */
+            min-width: 120px; /* Ensure buttons don't get too small */
+        }
+        button:hover {
+            background-color: #616c82; /* Darker on hover */
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 1rem;
+            color: #f6ad55; /* Orange for messages/errors */
+        }
+        .download-links {
+            margin-top: 1.5rem;
             display: flex;
             flex-direction: column;
+            gap: 0.5rem;
             align-items: center;
-            gap: 1.5rem;
+        }
+        .download-links a {
+            color: #63b3ed; /* Blue for links */
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .download-links a:hover {
+            text-decoration: underline;
         }
 
-        .profile-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--accent);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        /* Specific button colors */
+        #startCameraButton { background-color: #48bb78; } /* Green */
+        #startCameraButton:hover { background-color: #68d391; }
+
+        #takePhotoButton { background-color: #3182ce; } /* Blue */
+        #takePhotoButton:hover { background-color: #63b3ed; }
+
+        #recordVideoButton { background-color: #ed8936; } /* Orange */
+        #recordVideoButton:hover { background-color: #f6ad55; }
+
+        #stopRecordingButton { background-color: #e53e3e; } /* Red */
+        #stopRecordingButton:hover { background-color: #fc8181; }
+
+        #startAutoPhotoButton { background-color: #9f7aea; } /* Purple */
+        #startAutoPhotoButton:hover { background-color: #b794f4; }
+
+        #stopAutoPhotoButton { background-color: #e53e3e; } /* Red */
+        #stopAutoPhotoButton:hover { background-color: #fc8181; }
+
+        .input-group {
+            display: flex;
+            flex-direction: column; /* Stack vertically by default on small screens */
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
-
-        .about-text h3 {
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-            font-size: 1.5rem;
+        /* For small screens and up, make input group horizontal */
+        @media (min-width: 640px) { /* Tailwind's 'sm' breakpoint */
+            .input-group {
+                flex-direction: row;
+            }
         }
-
-        .about-text p {
-            color: var(--text-muted);
+        .input-group label {
+            white-space: nowrap;
         }
-
-        /* --- RESPONSIVE OPTIMIZATIONS (Mobile First) --- */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1rem 1rem; /* Tighter padding on mobile */
-            }
-            
-            .logo {
-                margin-bottom: 0.5rem;
-            }
-
-            .controls {
-                width: 100%;
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-            
-            input[type="text"], select {
-                width: 100%;
-                padding: 0.8rem 1rem; /* Ensuring good touch targets */
-            }
-
-            .container {
-                padding: 0 1rem;
-                margin: 1.5rem auto;
-            }
-
-            /* Adjust card typography for smaller screens */
-            .card-title {
-                font-size: 1.15rem;
-            }
-            
-            .card-excerpt {
-                font-size: 0.9rem;
-            }
-
-            /* Modal adjustments for small screens */
-            .modal-content {
-                padding: 1.5rem;
-                width: 95%; /* Take up more space */
-            }
-            
-            .modal-image {
-                height: 200px; /* Shorter image height */
-            }
-
-            .close-modal {
-                top: 0.5rem;
-                right: 1rem;
-            }
-            
-            .read-more-btn {
-                width: 100%; /* Full width button in mobile view */
-                align-self: stretch;
+        .input-group input, .input-group select {
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            border: 1px solid #4a5568;
+            background-color: #2d3748;
+            color: #e2e8f0;
+            width: 100%; /* Make input full width on small screens */
+            max-width: 120px; /* Limit width on larger screens */
+        }
+        .input-group select {
+            width: 100%; /* Make select full width on small screens */
+            max-width: 200px; /* Limit width on larger screens */
+        }
+        /* Ensure select doesn't get too narrow on small screens */
+        @media (max-width: 639px) {
+            .input-group select, .input-group input {
+                width: calc(100% - 2rem); /* Account for padding */
             }
         }
     </style>
 </head>
 <body>
-
-    <!-- Header with Search and Filter -->
-    <header>
-        <div class="logo">MAHENDER BLOGS</div>
-        <div class="controls">
-            <select id="categoryFilter" onchange="filterPosts()">
-                <option value="all">All Topics</option>
-                <option value="Travel">Travel</option>
-                <option value="Politics">Politics</option>
-                <option value="International Affairs">International Affairs</option>
-                <option value="Study">Study</option>
-                <option value="Food">Food</option>
-                <option value="Science">Science</option>
-                <option value="Fitness">Fitness</option>
-                <option value="Music">Music</option>
-                <option value="Tech">Technology</option>
-                <option value="Thoughts">Thoughts</option> 
-            </select>
-            <input type="text" id="searchInput" placeholder="Search blogs..." onkeyup="filterPosts()">
-        </div>
-    </header>
-
-    <!-- Main Grid Container -->
     <div class="container">
-        <div class="blog-grid" id="blogGrid">
-            <!-- Blog cards will be injected here by JavaScript -->
-        </div>
-    </div>
+        <h1 class="text-2xl font-bold mb-6">Silent Camera App</h1>
 
-    <!-- Footer Section -->
-    <footer>
-        <div class="footer-content">
-            <img src="https://i.postimg.cc/vZz6mpHY/IMG20230408101248.jpg" alt="Mahender" class="profile-img">
-            <div class="about-text">
-                <h3>About Mahender</h3>
-                <p>Welcome to my personal blog space! I am passionate about a wide range of topics, including **Travel, Politics, International Affairs, and Study**, alongside my interests in Technology, Food, Science, Fitness, and Music. Here, I share my thoughts and experiences to help others learn and grow. Thanks for visiting!</p>
-                <p style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.6;">&copy; 2024 Mahender Blogs. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+        <!-- The video feed is hidden by default -->
+        <video id="cameraFeed" autoplay muted playsinline class="bg-black hidden"></video>
+        <canvas id="photoCanvas" class="hidden bg-black"></canvas>
 
-    <!-- Modal for Reading Full Content -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <img src="" alt="" class="modal-image" id="modalImage">
-            <div class="badge" id="modalCategory">Category</div>
-            <h2 id="modalTitle" style="margin-bottom: 1rem; color: white;">Title</h2>
-            <div id="modalBody" style="color: var(--text-muted); line-height: 1.8;">
-                <!-- Full text goes here -->
-            </div>
+        <div class="message" id="message"></div>
+
+        <div class="input-group mt-4">
+            <label for="cameraSelect">Select Camera:</label>
+            <select id="cameraSelect">
+                <!-- Options will be dynamically populated here -->
+            </select>
+        </div>
+
+        <div class="button-group">
+            <button id="startCameraButton">Start Camera</button>
+            <button id="takePhotoButton" disabled>Take Photo</button>
+            <button id="recordVideoButton" disabled>Record Video</button>
+            <button id="stopRecordingButton" disabled>Stop Recording</button>
+        </div>
+
+        <div class="input-group mt-4">
+            <label for="photoInterval">Auto Photo Interval (seconds):</label>
+            <input type="number" id="photoInterval" value="5" min="1">
+        </div>
+        <div class="button-group">
+            <button id="startAutoPhotoButton" disabled>Start Automatic Photos</button>
+            <button id="stopAutoPhotoButton" disabled>Stop Automatic Photos</button>
+        </div>
+
+        <div class="download-links" id="downloadLinks">
+            <!-- Download links will be appended here -->
+        </div>
+
+        <div class="message mt-4 text-sm text-gray-400">
+            *Note: Automatic photo capture works best when the browser tab is active and in focus. Browsers typically pause camera access for inactive tabs for privacy and resource management.
         </div>
     </div>
 
     <script>
-        // ==========================================
-        // HOW TO UPLOAD YOUR BLOGS VIA CODE
-        // ==========================================
-        // All posts are now explicitly defined below for easy editing.
-        // ==========================================
+        // Get references to DOM elements
+        const cameraFeed = document.getElementById('cameraFeed');
+        const photoCanvas = document.getElementById('photoCanvas');
+        const messageElement = document.getElementById('message');
+        const startCameraButton = document.getElementById('startCameraButton');
+        const takePhotoButton = document.getElementById('takePhotoButton');
+        const recordVideoButton = document.getElementById('recordVideoButton');
+        const stopRecordingButton = document.getElementById('stopRecordingButton');
+        const startAutoPhotoButton = document.getElementById('startAutoPhotoButton');
+        const stopAutoPhotoButton = document.getElementById('stopAutoPhotoButton');
+        const photoIntervalInput = document.getElementById('photoInterval');
+        const downloadLinksDiv = document.getElementById('downloadLinks');
+        const cameraSelect = document.getElementById('cameraSelect');
 
-        const blogData = [
-            // --- POST 1 (VRINDAVAN TRIP) ---
-            {
-                id: 1,
-                title: "VRINDAVAN TRIP",
-                category: "Travel",
-                image: "https://i.postimg.cc/pXqhggxb/IMG20230416065543.jpg",
-                excerpt: "An exciting travelogue of my memorable 21km Parikrama trip to Vrindavan with my family.",
-                content: `Hey friends, this is Mahender here.
-I am going to tell you my experience when I went to Vrindavan. 
-Yeah, seven months ago, I went there for worship and 
-I was very happy to hear that we were going there.
-So my whole family went there with me. 
-Let's start from where we got ready.
-I am in Rajasthan, Geejgarh.
-We packed all the items that we needed, like stove, cylinder, some fruits and gods' photos.
-And then we prayed to God for this happy journey. And then we all sat in a jeep and a tempo.
-And the happy thing for me was that I sat on the upper side of the tempo and I enjoyed looking at nature's beauty. 
-And after some time, the trees hit those who sat on the tempo. We saved ourselves when the trees tried to hit us. 
-Now we were getting late and it was 8 pm and we were still in Rajasthan. 
-We didn't cross the Rajasthan border yet. And then we got bored, so I started to sing a Radha Rani song like "Radhe Radhe Bol Vrindavan Me Dhol" and "Mukh Se Radhe Radhe Bol".
-We sang that one by one and you know, I was very happy because this day would be memorable for me.
-And at 12 am, we reached there. First we washed our hands and mouth and then we sat to eat food that we brought from home.
-And then we went to worship Govardhan. And then we started the parikrama of 7 kos which is 21 km.
-And this was the most enjoyable part for us. Now everyone was walking for the parikrama. 
-I was also walking and there were lots of monkeys. And I saw there were many temples on the way of the parikrama. 
-We stopped at every temple and gave 1 or 2 rupees in every donation box. And after a few minutes, I bought some chana and gave it to the monkeys.
-And everyone looked happy. Now at 5 am, we reached Radha Kund and there we worshipped Radha. 
-And then we continued our parikrama. There were lots of kunds there.
-And then we completed our parikrama. More story in the next part.`
-            },
-            // --- POST 2 (Village Adventures to Business Focus) ---
-            {
-                id: 2,
-                title: "From Village Adventures to Business Focus",
-                category: "Study",
-                image: "https://i.postimg.cc/zGzv7pRc/IMG_20231212_WA0036.jpg",
-                excerpt: "A reflection on the shift from childhood rural travel adventures to the serious responsibilities of 10th standard, preparing for business and academic success.",
-                content: `Hi everyone, this is Mahender and I'm here to share my story with you. My favourite pastime is visiting rural areas and enjoying the natural beauty. I have been doing this since I was a child and I still love it.
+        let mediaStream = null; // Stores the camera stream
+        let mediaRecorder = null; // Stores the MediaRecorder instance for video
+        let recordedChunks = []; // Stores chunks of recorded video data
+        let autoPhotoIntervalId = null; // Stores the interval ID for automatic photos
+        let availableCameras = []; // Stores details of available video input devices
 
-When I was younger, I used to get very excited whenever my father told me that we were going to the village by train. I liked to see the green fields, the mountains, the rivers and the animals from the train window. Sometimes we also travelled by aeroplane and that was even more thrilling. I felt like I was flying in the sky and seeing the world from a different perspective.
+        // Function to display messages to the user
+        function showMessage(msg, type = 'info') {
+            messageElement.textContent = msg;
+            messageElement.className = `message ${type === 'error' ? 'text-red-500' : 'text-yellow-500'}`;
+        }
 
-But now things have changed. I am in 10th standard and I have many responsibilities. I have to study hard, do my homework, prepare for exams and think about my future. I don't have much time or interest to go to the village anymore. Now my focus is only on becoming a good student and a successful businessman.
+        // Function to enable/disable buttons based on camera and recording state
+        function updateButtonStates(cameraActive, recording, autoCapturing) {
+            startCameraButton.disabled = cameraActive;
+            takePhotoButton.disabled = !cameraActive || recording || autoCapturing;
+            recordVideoButton.disabled = !cameraActive || recording || autoCapturing;
+            stopRecordingButton.disabled = !recording;
+            startAutoPhotoButton.disabled = !cameraActive || recording || autoCapturing;
+            stopAutoPhotoButton.disabled = !autoCapturing;
+            photoIntervalInput.disabled = autoCapturing;
+            cameraSelect.disabled = cameraActive; // Disable camera selection once started
+        }
 
-I hope you understand my situation and respect my choices. Thank you for reading my blog post and please leave your comments below.`
-            },
-            // --- POST 3 (My First Bicycle) ---
-            {
-                id: 3,
-                title: "My First Bicycle: A Childhood Memory",
-                category: "Travel",
-                image: "https://i.postimg.cc/Z51mNLYp/Screenshot_2025_12_03_133428.png",
-                excerpt: "A sentimental story about the first bicycle, racing friends, and the feeling of freedom from childhood.",
-                content: `Hi, my name is Mahender and I want to share with you a story from my childhood. Do you remember the first time you rode a bicycle? I do. It was 10 years ago, when I was 8 years old. I was so curious and excited to learn how to ride a bike that my parents bought me an old one from a garage sale. It was not the fanciest or the newest bike, but it was mine and I loved it.
+        // Function to populate the camera selection dropdown
+        async function populateCameraSelect() {
+            cameraSelect.innerHTML = ''; // Clear existing options
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                availableCameras = devices.filter(device => device.kind === 'videoinput');
 
-I used to race with my friends every day after school. We would go to the park or the street and see who could go faster or farther. I was always the winner, because I practiced a lot and had a lot of fun. Riding a bike made me happy and gave me a sense of freedom and adventure. I felt like I could go anywhere and do anything.
+                if (availableCameras.length === 0) {
+                    showMessage('No video input devices found.', 'error');
+                    startCameraButton.disabled = true; // Disable start button if no cameras
+                    return;
+                }
 
-But as time passed, my bike got older and rustier. I started to lose interest in riding it. I wanted to try new things and explore new hobbies. I also had more homework and less time to play. So I left my bike in the garage and forgot about it.
+                // Add default options first
+                // These are useful if device labels are not immediately available
+                // or if specific facing modes are preferred.
+                cameraSelect.add(new Option('Default Camera', 'default'));
+                cameraSelect.add(new Option('Front Camera (User)', 'user'));
+                cameraSelect.add(new Option('Back Camera (Environment)', 'environment'));
 
-Now, I am 18 years old and I have not ridden a bike in years. Sometimes I wonder if I still remember how to do it. Maybe one day I will get a new bike and try again. Maybe I will feel the same joy and thrill that I felt when I was 8 years old. But for now, I will just keep this memory in my heart and share it with you.
+                // Add specific camera devices if labels are available
+                availableCameras.forEach(device => {
+                    const optionText = device.label || `Camera ${device.deviceId.substring(0, 8)}...`;
+                    const option = new Option(optionText, device.deviceId);
+                    cameraSelect.add(option);
+                });
 
-Thank you for reading my blog post. Next time, I will tell you more about my life and what I am doing now. Stay tuned!`
-            },
-            // --- POST 4 (IIT Aspirations) ---
-            {
-                id: 4,
-                title: "A Day in My Life and IIT Aspirations",
-                category: "Study",
-                image: "https://i.postimg.cc/mZymJ259/93afjr_Hqmks_Hl2srb8Qlw_ZPc08Zes6e_BM2g_CKy5_p_CY_plaintext_638295284752320315.jpg",
-                excerpt: `A glimpse into my life, from a memorable childhood school incident to the current struggles and focus on preparing for the IIT entrance exam.`,
-                content: `Hello, this is the story of my life. This journey started on 2006, the day I was born. I remember crying and my parents feeling happy to see me. I don't know why it happened, but I was happy too. As I grew up, problems also increased. But that's normal, right? I am from a middle-class family and this is part of my childhood.
+                showMessage('Cameras loaded. Select a camera and click "Start Camera".');
 
-One of the incidents that I still remember is when I went to school for an exam. After the exam was over, the teacher held all the students for 10 to 15 minutes because outside the school was very crowded. Me and my friends started to beat the table loudly and suddenly the teacher came and took us out of the classroom. She told us to stand like cocks in a gallery. At that time, some small children left for home and everyone was laughing to see us. I felt like I had to take a transfer certificate from the school and leave from there, but it was not possible. After some time, the teacher let me go and told me not to do that again. But she did not release my other friends and they had to wait until all the children went home. Then we laughed at each other and went home. This is a short part of my life.
-
-As I got older, more incidents happened with me. And now today is 14 Feb 2023 and time is 11 am. In my childhood, I did not feel many problems because my parents solved all my problems for me. But now they also solve my problems, but some things they cannot do for me. My parents gave me all the resources that I needed. I started preparing for IIT four months ago, but today I feel like I have not studied anything and everything is gone from my hand.
-
-This is my blog post about my life so far. I hope you enjoyed reading it and learned something from it. Thank you for your time and attention.
-
-This story was written on 14 Feb 2023 at 11 am.`
-            },
-
-            // --- POST 5 (Dausa Bus Stop) ---
-            {
-                id: 5,
-                title: "The Dream of the Dausa Bus Stop (A Short Story)",
-                category: "Travel",
-                image: "https://i.postimg.cc/26HLrJmn/IMG20251025110247.jpg",
-                excerpt: "A short, spooky story written in 2022 about an unnerving night experience at a bus stop in Dausa, Rajasthan, which turns out to be a strange dream.",
-                content: `Hello, this is Mahender here. I want to share a story with you that I wrote on 6/10/2022. Let's begin the story.
-
-This is the story of Dausa, a town in Rajasthan. One day, I went to visit my grandmother's home in Dausa. That was a night when different incidents happened to me. It was the time when everyone was sleeping and spirits were around us. I went to my uncle's house before going to my grandmother's home, because there was a pond in the way to my grandmother's home. After 7 pm, I left my uncle's house to go to my grandmother's house. So I was waiting at the bus stop for an hour, but there was no bus, rickshaw or anyone else with me. Suddenly, I heard a horn and a light flashed on my face. I couldn't see clearly. He stopped his bike in front of me and I was very scared to see him. After some time, he told me not to wait for the bus or rickshaw, because no one would come at that time. He told me to sit with him and go to his home. But I was scared, so I didn't go with him. He left from there and came back again. He told me to go to his home until morning and then I could leave. I had no other choice, so I was very scared but I sat with him and went to his home. In a few minutes, we reached his home and he knocked on his door. A lady came out with a knife. I was very scared. He told her that the food was ready. I was very scared. She looked like she wanted to eat me. And then we ate the food. Then he gave me a blanket and I slept with it. When morning came, I saw that I was at the bus stop. So I realized that it was a dream. This is the story of what happened to me at the bus stop. I hope you liked it.`
-            },
-            // --- POST 6 (Learning Mindset) ---
-            {
-                id: 6,
-                title: "How to Develop a Learning Mindset?",
-                category: "Study",
-                image: "https://i.postimg.cc/q7VY7j09/Screenshot_2025_12_03_140524.png",
-                excerpt: "Discover how to shift from a competitive focus to a learning mindset, embracing challenges for growth and starting your day with clear intention and purpose.",
-                content: `Many people have a competitive mindset and they only want to try to win. They don't try to learn something new and they miss out on the opportunities for growth and development. In life, everything is not about winning. Therefore, we should learn from the situations where we face challenges and problems, not from the ones where everything is easy and comfortable. 
-
-One way to cultivate a learning mindset is to get up in the form every morning. This means that we should start our day with a clear intention, a positive attitude and a willingness to learn. We should not just get up in the morning without any purpose or direction. Getting up in the form helps us to focus on our goals, to overcome obstacles and to improve ourselves.`
-            },
-            // --- POST 7 (Geejgarh Fort Adventure) - Image Updated ---
-            {
-                id: 7,
-                title: "Geejgarh Fort Adventure (2022)",
-                category: "Travel",
-                image: "https://i.postimg.cc/m2T7T903/IMG_20250421_WA0054.jpg",
-                excerpt: "A short story from 2022 detailing a visit to the historic Geejgarh Fort in the village, enjoying the peaceful views and the temple of Lord Shiva.",
-                content: `Hello everyone! Today I visited my village and decided to go to the fort. It is known as Geejgarh Fort and it has a lot of history and beauty. I started climbing the fort and enjoyed the amazing view from there. I could see the green fields, the blue sky and the distant mountains. I felt like I was in a different world.
-
-When I reached the top of the fort, I found a flat surface where I sat down and relaxed. I felt like all my problems were blown away by the cool breeze. I felt like a king on the fort, surrounded by nature and peace. There was a temple of Lord Shiva and many monkeys who were playing and fighting with each other. There was also a tap where parrots and other birds came to drink water. It was a lovely sight to watch.
-
-This is a small story about my experience on Geejgarh Fort. It was a place where I forgot all my worries and remembered only myself and the view of my village. I hope you enjoyed reading it and maybe you will visit it someday too.`
-            },
-            // --- POST 8 (Hindi Poem: Galti) ---
-            {
-                id: 8,
-                title: "गलती (Mistake)",
-                category: "Thoughts",
-                image: "https://i.postimg.cc/HsK5XNJm/IMG20251025171837.jpg",
-                excerpt: "एक आत्म-चिंतन कविता, जो गलतियों को क्षमा करने, लेकिन टूटे हुए विश्वास को फिर से जोड़ने की मानसिक कश्मकश को दर्शाती है।",
-                content: `1. गलती
-
-के भूल जाऊँगा तेरी हर गलती  
-हर पाप, हर अपराध क्षमा है  
-लेकिन दिल को कैसे मैं समझाऊँगा  
-उसी मोड़ से शुरुआत के लिए कैसे मनाऊँगा  
-कैसे जोड़ूँगा मैं अपने दिल को  
-दिल तो दिल मन को कैसे मैं मनाऊँगा  
-कैसे फिर मन को झूठी आशाओं से समझाऊँगा  
-और मन मान भी गया, तो दिमाग पूछ ही लेगा इसका प्रमाण क्या  
-कि आशाएँ अब निराशा में नहीं बदलेंगी  
-जैसे ये पहले बदल गई अब नहीं बदलेंगी`
-            },
-            // --- POST 9 (Hindi Poem: Khushiyan) - Image Updated ---
-            {
-                id: 9,
-                title: "खुशियाँ (Joys)",
-                category: "Thoughts",
-                image: "https://i.postimg.cc/T1vkQPND/74cf6865_ce0a_459f_b76a_434adfb17a0f.jpg",
-                excerpt: "बचपन की प्यारी यादों और माता-पिता के निस्वार्थ प्यार को दर्शाती एक मार्मिक कविता।",
-                content: `खुशियाँ
-
-जीवन में इतनी कठिनाई है,  
-फिर भी इसी में खुशियाँ पाई हैं।  
-बचपन में घुटने-घुटने जाता था,  
-और झट से पापा की गोदी में चढ़ जाता था।  
-माँ दूध पिलाने आती थी, मैं पापा के पीछे छिप जाता था।  
-जब मैं खटिया से गिर जाता था,  
-मंद-मंद मुस्कुराता था।  
-उसमें भी माँ रो-रोकर अपनी आँख सुजा लिया करती थी।  
-दो मिनट न दिखा तो पूरा मोहल्ले को जगा दिया करती थी।  
-जीवन में इतनी कठिनाई है, फिर भी इसी में खुशियाँ पाई हैं।`
-            },
-            // --- NEW POST 10 (मन का द्वंद्व) ---
-            {
-                id: 10,
-                title: "मन का द्वंद्व",
-                category: "Thoughts",
-                image: "https://i.postimg.cc/DynhwffW/IMG_20250526_WA0024.jpg",
-                excerpt: "आज कुछ मन उदास है, दिल की हर धड़कन उदास है। मन और शरीर के बीच की कश्मकश को दर्शाती एक कविता।",
-                content: `आज कुछ मन उदास है,  
-दिल की हर धड़कन उदास है।  
-न जाने क्यों बांधा है इन बेड़ियों में खुद को मैंने,  
-दिल मचल रहा है जमाने में मचाने के लिए,  
-लेकिन शरीर ने बांधा है खुद को जमाने में न भटकने के लिए।  
-मन कहता है तोड़ दे सारी बेड़ियाँ,  
-दिमाग कहता है पढ़ ले थोड़ा और ज़रा। और फिर आत्मा कहती है चला जा जी ले ज़िंदगी,  
-लेकिन एक बात और सुन ले, चला गया तो आ नहीं पाएगा।  
-और मान ले वापस उस स्थिति में आ भी गया,  
-तो तू भी फिर खुद को पहचान नहीं पाएगा।`
+            } catch (err) {
+                console.error('Error enumerating devices:', err);
+                showMessage('Error enumerating cameras. Please ensure permissions are granted.', 'error');
+                startCameraButton.disabled = true;
             }
-        ];
+        }
 
-        // --- RENDER LOGIC ---
-        const blogGrid = document.getElementById('blogGrid');
-        const searchInput = document.getElementById('searchInput');
-        const categoryFilter = document.getElementById('categoryFilter');
-
-        function renderPosts(posts) {
-            blogGrid.innerHTML = ''; // Clear current grid
-
-            if (posts.length === 0) {
-                blogGrid.innerHTML = '<p style="color:var(--text-muted); grid-column: 1/-1; text-align:center;">No posts found.</p>';
+        // Function to start the camera feed
+        async function startCamera() {
+            // Check if camera is already active
+            if (mediaStream && mediaStream.active) {
+                showMessage('Camera is already running. Please stop it first to change camera.', 'info');
                 return;
             }
 
-            posts.forEach(post => {
-                const card = document.createElement('article');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="thumbnail-area">
-                        <img src="${post.image}" alt="${post.title}" onerror="this.onerror=null;this.src='https://placehold.co/800x600/1e293b/f1f5f9?text=Image+Placeholder'" loading="lazy">
-                    </div>
-                    <div class="card-content">
-                        <span class="badge">${post.category}</span>
-                        <h3 class="card-title">${post.title}</h3>
-                        <p class="card-excerpt">${post.excerpt}</p>
-                        <button class="read-more-btn" onclick="openModal(${post.id})">Read Article</button>
-                    </div>
-                `;
-                blogGrid.appendChild(card);
-            });
+            const selectedCameraId = cameraSelect.value;
+            let videoConstraints = {};
+
+            // Determine video constraints based on selection
+            if (selectedCameraId === 'user') {
+                videoConstraints = { facingMode: 'user' };
+            } else if (selectedCameraId === 'environment') {
+                videoConstraints = { facingMode: 'environment' };
+            } else if (selectedCameraId === 'default') {
+                // No specific facingMode, let browser pick default
+                videoConstraints = true;
+            } else {
+                // Specific device ID selected
+                videoConstraints = { deviceId: { exact: selectedCameraId } };
+            }
+
+            showMessage('Requesting camera access...');
+            try {
+                // Request video stream, explicitly no audio for silent operation
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: videoConstraints,
+                    audio: false // Crucial for no sound
+                });
+
+                // Set the video element's source to the camera stream
+                cameraFeed.srcObject = mediaStream;
+                // Even though the video element is hidden, it needs to play
+                // for its frames to be accessible by the canvas for photo capture
+                // and by MediaRecorder for video recording.
+                await cameraFeed.play();
+
+                showMessage(`Camera (${selectedCameraId}) started successfully. You can now take photos, record videos, or start automatic photo capture.`);
+                updateButtonStates(true, false, false); // Camera active, not recording, not auto-capturing
+
+            } catch (err) {
+                console.error('Error accessing camera:', err);
+                if (err.name === 'NotAllowedError') {
+                    showMessage('Camera access denied. Please allow camera permissions in your browser settings.', 'error');
+                } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+                    showMessage('No camera found on your device or the selected camera is not available.', 'error');
+                } else if (err.name === 'OverconstrainedError') {
+                    showMessage(`The selected camera or facing mode is not available. Try another option.`, 'error');
+                }
+                else {
+                    showMessage(`Error: ${err.message || 'Could not start camera.'}`, 'error');
+                }
+                updateButtonStates(false, false, false); // Camera inactive
+            }
         }
 
-        // --- FILTERING LOGIC ---
-        function filterPosts() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const selectedCategory = categoryFilter.value;
-
-            const filtered = blogData.filter(post => {
-                const matchesSearch = post.title.toLowerCase().includes(searchTerm) || 
-                                      post.excerpt.toLowerCase().includes(searchTerm);
-                const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
-                
-                return matchesSearch && matchesCategory;
-            });
-
-            renderPosts(filtered);
+        // Function to stop the camera feed
+        function stopCamera() {
+            if (mediaStream) {
+                // Stop any ongoing automatic photo capture
+                stopAutomaticPhotos();
+                // Stop all tracks in the stream
+                mediaStream.getTracks().forEach(track => track.stop());
+                cameraFeed.srcObject = null; // Clear the video element source
+                mediaStream = null; // Clear the stream variable
+                showMessage('Camera stopped.');
+                updateButtonStates(false, false, false); // Camera inactive
+                // Clear any existing download links
+                downloadLinksDiv.innerHTML = '';
+            }
         }
 
-        // --- MODAL LOGIC ---
-        const modal = document.getElementById('modalOverlay');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalImage = document.getElementById('modalImage');
-        const modalCategory = document.getElementById('modalCategory');
-        const modalBody = document.getElementById('modalBody');
+        // Function to capture a single photo
+        function capturePhoto() {
+            if (!mediaStream || !mediaStream.active) {
+                showMessage('Camera is not active. Cannot capture photo.', 'error');
+                return;
+            }
 
-        function openModal(id) {
-            const post = blogData.find(p => p.id === id);
-            if (!post) return;
+            // Set canvas dimensions to match video stream dimensions
+            photoCanvas.width = cameraFeed.videoWidth;
+            photoCanvas.height = cameraFeed.videoHeight;
 
-            modalTitle.textContent = post.title;
-            modalImage.src = post.image;
-            modalImage.onerror = () => modalImage.src = 'https://placehold.co/800x300/1e293b/f1f5f9?text=Image+Not+Found'; // Fallback
-            modalCategory.textContent = post.category;
-            // Using innerHTML here to respect the multi-line formatting from template literals
-            // and replace newlines with <br> for proper display in the modal
-            modalBody.innerHTML = post.content.replace(/\n/g, '<br>');
+            const context = photoCanvas.getContext('2d');
+            // Draw the current frame of the video onto the canvas
+            context.drawImage(cameraFeed, 0, 0, photoCanvas.width, photoCanvas.height);
 
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            // Get image data as a PNG data URL
+            const imageDataUrl = photoCanvas.toDataURL('image/png');
+
+            // Create a download link for the photo
+            const downloadLink = document.createElement('a');
+            downloadLink.href = imageDataUrl;
+            downloadLink.download = `auto-photo-${new Date().toISOString()}.png`;
+            downloadLink.textContent = `Download Photo (${new Date().toLocaleTimeString()})`;
+            downloadLink.classList.add('text-sm'); // Make text a bit smaller for multiple links
+            downloadLinksDiv.prepend(downloadLink); // Add to the top of download links
+
+            showMessage('Photo captured!');
         }
 
-        function closeModal() {
-            modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
+        // Event listener for the "Take Photo" button
+        takePhotoButton.addEventListener('click', capturePhoto);
 
-        // Close modal if clicking outside the content box
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
+        // Function to start video recording
+        recordVideoButton.addEventListener('click', () => {
+            if (!mediaStream || !mediaStream.active) {
+                showMessage('Camera is not active. Please start the camera first.', 'error');
+                return;
+            }
+
+            // Stop any ongoing automatic photo capture before recording
+            stopAutomaticPhotos();
+
+            // Clear previous recorded chunks
+            recordedChunks = [];
+            // Create a new MediaRecorder instance from the media stream
+            mediaRecorder = new MediaRecorder(mediaStream);
+
+            // Event listener for when data is available (video chunks)
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            // Event listener for when recording stops
+            mediaRecorder.onstop = () => {
+                // Create a Blob from all recorded chunks
+                const blob = new Blob(recordedChunks, { type: 'video/webm' }); // WebM is widely supported
+                const videoUrl = URL.createObjectURL(blob); // Create a URL for the Blob
+
+                // Create a download link for the video
+                const downloadLink = document.createElement('a');
+                downloadLink.href = videoUrl;
+                downloadLink.download = `video-${new Date().toISOString()}.webm`;
+                downloadLink.textContent = 'Download Video';
+                downloadLinksDiv.prepend(downloadLink); // Add to the top of download links
+
+                showMessage('Video recording stopped.');
+            };
+
+            // Start recording
+            mediaRecorder.start();
+            showMessage('Recording video...');
+            updateButtonStates(true, true, false); // Camera active, recording in progress
         });
 
-        // Initial Render
-        renderPosts(blogData);
+        // Function to stop video recording
+        stopRecordingButton.addEventListener('click', () => {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                updateButtonStates(true, false, false); // Camera active, not recording, not auto-capturing
+            } else {
+                showMessage('No video recording in progress.', 'error');
+            }
+        });
 
+        // Function to start automatic photo capture
+        startAutoPhotoButton.addEventListener('click', () => {
+            if (!mediaStream || !mediaStream.active) {
+                showMessage('Camera is not active. Please start the camera first.', 'error');
+                return;
+            }
+
+            const intervalSeconds = parseInt(photoIntervalInput.value, 10);
+            if (isNaN(intervalSeconds) || intervalSeconds < 1) {
+                showMessage('Please enter a valid interval (1 second or more).', 'error');
+                return;
+            }
+
+            // Stop any existing auto-capture first
+            stopAutomaticPhotos();
+
+            // Start automatic capture
+            autoPhotoIntervalId = setInterval(capturePhoto, intervalSeconds * 1000); // Convert seconds to milliseconds
+            showMessage(`Automatic photo capture started every ${intervalSeconds} seconds.`);
+            updateButtonStates(true, false, true); // Camera active, not recording, auto-capturing
+        });
+
+        // Function to stop automatic photo capture
+        stopAutoPhotoButton.addEventListener('click', () => {
+            stopAutomaticPhotos();
+        });
+
+        function stopAutomaticPhotos() {
+            if (autoPhotoIntervalId) {
+                clearInterval(autoPhotoIntervalId);
+                autoPhotoIntervalId = null;
+                showMessage('Automatic photo capture stopped.');
+                updateButtonStates(true, false, false); // Camera active, not recording, not auto-capturing
+            }
+        }
+
+        // Event listener for the "Start Camera" button
+        startCameraButton.addEventListener('click', startCamera);
+
+        // Optional: Stop camera and auto-capture when the user navigates away or closes the tab
+        window.addEventListener('beforeunload', stopCamera);
+
+        // Initial setup on page load
+        populateCameraSelect(); // Populate camera dropdown first
+        updateButtonStates(false, false, false);
+        showMessage('Select a camera and click "Start Camera".');
     </script>
 </body>
 </html>
